@@ -9,4 +9,4 @@
 ![example 2](https://github.com/muchirijohn/Matrix-Display-5-Digit/blob/main/atmel_studio-code.png)
 
 ## credit
-@ngoirimbagara
+Mercy N
