@@ -1,5 +1,5 @@
 # Matrix-Display-5-Digit
- 5 digit matrix display
+ 5 digit matrix display<br>
  based on a project done in 2013 for science hack event at iHub nairobi
 
 ## example
