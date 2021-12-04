@@ -58,9 +58,9 @@ main.d
 C_DEPS_AS_ARGS +=  \
 main.d
 
-OUTPUT_FILE_PATH +=Matrix-Display-5-Digit.elf
+OUTPUT_FILE_PATH +=Matrix-Display.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=Matrix-Display-5-Digit.elf
+OUTPUT_FILE_PATH_AS_ARGS +=Matrix-Display.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -105,13 +105,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Matrix-Display-5-Digit.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p"  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="Matrix-Display.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.6.364\gcc\dev\atmega328p"  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Matrix-Display-5-Digit.elf" "Matrix-Display-5-Digit.hex"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Matrix-Display-5-Digit.elf" "Matrix-Display-5-Digit.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "Matrix-Display-5-Digit.elf" > "Matrix-Display-5-Digit.lss"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "Matrix-Display-5-Digit.elf" "Matrix-Display-5-Digit.srec"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "Matrix-Display-5-Digit.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "Matrix-Display.elf" "Matrix-Display.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "Matrix-Display.elf" "Matrix-Display.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "Matrix-Display.elf" > "Matrix-Display.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "Matrix-Display.elf" "Matrix-Display.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-size.exe" "Matrix-Display.elf"
 	
 	
 
@@ -123,5 +123,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "Matrix-Display-5-Digit.elf" "Matrix-Display-5-Digit.a" "Matrix-Display-5-Digit.hex" "Matrix-Display-5-Digit.lss" "Matrix-Display-5-Digit.eep" "Matrix-Display-5-Digit.map" "Matrix-Display-5-Digit.srec" "Matrix-Display-5-Digit.usersignatures"
+	rm -rf "Matrix-Display.elf" "Matrix-Display.a" "Matrix-Display.hex" "Matrix-Display.lss" "Matrix-Display.eep" "Matrix-Display.map" "Matrix-Display.srec" "Matrix-Display.usersignatures"
 	

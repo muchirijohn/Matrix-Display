@@ -13,7 +13,7 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AssemblyName>ShiftRegister</AssemblyName>
-    <Name>Matrix-Display-5-Digit</Name>
+    <Name>Matrix-Display</Name>
     <RootNamespace>ShiftRegister</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
@@ -110,6 +110,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="consts.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="data.h">
       <SubType>compile</SubType>
     </Compile>

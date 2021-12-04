@@ -1,37 +1,37 @@
 /*
-  * util.h
-  *
-  * Created: 6/16/2013 07:42:25
-  * (c) Muchiri John
-  *
-  * Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
+* util.h
+*
+* Created: 6/16/2013 07:42:MT_SIZE
+* (c) Muchiri John
+*
+* Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
-  * Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
+* Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
 
-  * Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in
-  the documentation and/or other materials provided with the
-  distribution.
+* Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in
+the documentation and/or other materials provided with the
+distribution.
 
-  * Neither the name of the copyright holders nor the names of
-  contributors may be used to endorse or promote products derived
-  from this software without specific prior written permission.
+* Neither the name of the copyright holders nor the names of
+contributors may be used to endorse or promote products derived
+from this software without specific prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE. See the GNU General Public License for more details.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE. See the GNU General Public License for more details.
 */
- 
+
 
 
 #ifndef SHIFT_EFFECTS_H_
@@ -54,10 +54,6 @@
 #define latch_pin 4
 #define clock_pin 5
 /************************************************************************/
-/* display end column.                                                     */
-/************************************************************************/
-#define end_pin 11
-/************************************************************************/
 /* global index for selecting multiplexing pins.                        */
 /************************************************************************/
 uint8_t plex_index = 0;
@@ -68,7 +64,7 @@ multiPins plex_pins[7] = {12, 13, 14, 15, 16, 17, 18};
 /************************************************************************/
 /* buffer to hold data for display during effects		                */
 /************************************************************************/
-uint8_t buffer[25];
+uint8_t buffer[MT_SIZE];
 uint8_t *bf = buffer;
 /************************************************************************/
 /* Arrays data.															*/
@@ -91,7 +87,7 @@ static inline void delay(int dl)
 /************************************************************************/
 void clearBuffer(){
 	uint8_t len = 0;
-	for(;len < 25; len++){
+	for(;len < MT_SIZE; len++){
 		*(bf+len) = 0;
 	}
 }
@@ -111,11 +107,10 @@ static inline void MultiPlex(uint8_t *pin)
 static inline void Clear(){
 	int x, y = 0;
 	pinsMultiWrite(plex_pins, LOW);
-	pinWrite(end_pin, LOW);
-	for(x = 0; x < 4; x++) {
+	for(x = 0; x < (SH_REG + 1); x++) {
 		pinWrite(latch_pin, LOW);
-		for(y = 0; y< 8 ; y++){
-			pinWrite(data_pin, (0 & (1  << (7 - y))));
+		for(y = 0; y<= FONT_HEIGHT ; y++){
+			pinWrite(data_pin, (0 & (1  << (FONT_HEIGHT - y))));
 			//toggle the clock pin
 			pinWrite(clock_pin, HIGH);
 			pinWrite(clock_pin, LOW);
@@ -127,45 +122,17 @@ static inline void Clear(){
 /************************************************************************/
 /* Display data                                                         */
 /************************************************************************/
-/*
-static inline void Display(const uint8_t *p)
-{
-	uint8_t byte, index, bit = 0;
-	uint8_t pos = 24;
-	//output byte
-	for(byte=0; byte<7; byte++){
-		pos = 24;
-		pinWrite(end_pin,(pgm_read_byte((p+pos)) & (1 << byte)));
-		pos--;
-		for(index=0; index<3; index++){
-			pinWrite(latch_pin, LOW);
-			for(bit = 0; bit < 8 ; bit++){
-				pinWrite(data_pin,(pgm_read_byte((p+pos)) & (1 << byte)));
-				//toggle the clock pin
-				pinWrite(clock_pin, HIGH);
-				pinWrite(clock_pin, LOW);
-				pos--;
-				if(pos < 0 ) break;
-			}
-			pinWrite(latch_pin, HIGH);
-		}
-		MultiPlex(&byte);
-		Clear();
-	}
-	delayms = 1;
-}*/
 static inline void DisplayBuffer(const uint8_t *p)
 {
 	uint8_t byte, index, bit = 0;
-	uint8_t pos = 24;
+	uint8_t pos = MT_SIZE - 1;
+	uint8_t pos_sz = pos;
 	//output byte
-	for(byte=0; byte<7; byte++){
-		pos = 24;
-		pinWrite(end_pin,((*(p+pos)) & (1 << byte)));
-		pos--;
-		for(index=0; index<3; index++){
+	for(byte=0; byte<FONT_HEIGHT; byte++){
+		pos = pos_sz;
+		for(index=0; index< SH_REG; index++){
 			pinWrite(latch_pin, LOW);
-			for(bit = 0; bit < 8 ; bit++){
+			for(bit = 0; bit <= FONT_HEIGHT ; bit++){
 				pinWrite(data_pin,((*(p+pos)) & (1 << byte)));
 				//toggle the clock pin
 				pinWrite(clock_pin, HIGH);
@@ -188,7 +155,6 @@ void init()
 	pinSet(data_pin, OUTPUT); /* DS		data pin*/
 	pinSet(latch_pin, OUTPUT); /* ST_CP     latch pin*/
 	pinSet(clock_pin, OUTPUT); /* SH_HP     clock pin*/
-	pinSet(end_pin, OUTPUT); /* Display end column*/
 	pinsMultiSet(plex_pins, OUTPUT); /* multiplexing pins*/
 }
 
@@ -198,10 +164,10 @@ void init()
 /*
 static inline void HoldDisplay(const uint8_t *data, uint8_t period)
 {
-	uint8_t x = 0;
-	for(x=0; x< period; x++){
-		Display(data);
-	}
+uint8_t x = 0;
+for(x=0; x< period; x++){
+Display(data);
+}
 }*/
 static inline void HoldDisplayBuffer(const uint8_t *data, uint8_t period)
 {
@@ -228,10 +194,10 @@ void ScrollRight(const uint8_t *p, uint8_t time)
 {
 	uint8_t index, begin, end = 0;
 	//*bf = buffer;
-	for(index = 0; index < 25; index++)
+	for(index = 0; index < MT_SIZE; index++)
 	{
 		for(begin = 0; begin <= index; begin++) (*(bf + begin) = 0x00);
-		for(end = index; end < 25; end++) (*(bf + end) = (*((p+(end-index)))));
+		for(end = index; end < MT_SIZE; end++) (*(bf + end) = (*((p+(end-index)))));
 		HoldDisplayBuffer(buffer, time);
 	}
 }
@@ -243,10 +209,10 @@ void DeleteRight(const uint8_t *p, uint8_t time)
 {
 	uint8_t index, begin, end = 0;
 	//uint8_t *bf = buffer;
-	for(index = 0; index < 25; index++)
+	for(index = 0; index < MT_SIZE; index++)
 	{
 		for(begin = 0; begin <= index; begin++) (*(bf + begin) = 0x00);
-		for(end = index; end < 25; end++) (*(bf + end) = (*((p+(end)))));
+		for(end = index; end < MT_SIZE; end++) (*(bf + end) = (*((p+(end)))));
 		HoldDisplayBuffer(buffer, time);
 	}
 }
@@ -257,10 +223,10 @@ void ScrollLeft(const uint8_t *p, uint8_t time)
 {
 	uint8_t index, begin, end = 0;
 	//uint8_t *bf = buffer;
-	for(index = 24 ; index > 0; index--)
+	for(index = MT_SIZE-1 ; index > 0; index--)
 	{
-		for(begin = 0; begin <= index; begin++) (*(bf + begin)) = (*((p+(begin+25-index))));
-		for(end = (index); end < 25 ; end++) (*(bf + end)) = 0x00;
+		for(begin = 0; begin <= index; begin++) (*(bf + begin)) = (*((p+(begin+MT_SIZE-index))));
+		for(end = (index); end < MT_SIZE ; end++) (*(bf + end)) = 0x00;
 		HoldDisplayBuffer(buffer, time);
 	}
 	//HoldDisplayBuffer(buffer, time);
@@ -274,10 +240,10 @@ void TypeIn(const uint8_t *p, uint8_t time)
 	uint8_t index, begin, end = 0;
 	//uint8_t *bf = buffer;
 	//HoldDisplay(p, 10);
-	for(index = 0; index < 25; index++)
+	for(index = 0; index < MT_SIZE; index++)
 	{
-		for(begin = 0; begin <= index; begin++)(*(bf + begin) = (*((p+(begin))))); 
-		for(end = index; end < 25; end++) (*(bf + end) = 0x00);
+		for(begin = 0; begin <= index; begin++)(*(bf + begin) = (*((p+(begin)))));
+		for(end = index; end < MT_SIZE; end++) (*(bf + end) = 0x00);
 		HoldDisplayBuffer(buffer, time);
 	}
 }
@@ -288,10 +254,10 @@ void DeleteLeft(const uint8_t *p, uint8_t time)
 {
 	uint8_t index, begin, end = 0;
 	//uint8_t *bf = buffer;
-	for(index = 24 ; index > 0; index--)
+	for(index = MT_SIZE -1 ; index > 0; index--)
 	{
 		for(begin = 0; begin <= index; begin++) (*(bf + begin)) = (*((p+begin)));
-		for(end = (index-1); end < 25 ; end++) (*(bf + end)) = 0x00;
+		for(end = (index-1); end < MT_SIZE ; end++) (*(bf + end)) = 0x00;
 		HoldDisplayBuffer(buffer, time);
 	}
 	HoldDisplayBuffer(buffer, time);
@@ -304,14 +270,14 @@ void Drop(const uint8_t *p, uint8_t time, uint8_t dir )
 {
 	//uint8_t *bf = buffer;
 	uint8_t index, step = 0;
-	for(step = 0; step < 7; step++)
+	for(step = 0; step < FONT_HEIGHT; step++)
 	{
-		for(index = 0; index < 25; index++)
+		for(index = 0; index < MT_SIZE; index++)
 		{
 			if(dir)
-			*(bf + index) = (*((p+index)) >> (7-step));
+			*(bf + index) = (*((p+index)) >> (FONT_HEIGHT-step));
 			else
-			*(bf + index) = (*((p+index)) << (7-step));
+			*(bf + index) = (*((p+index)) << (FONT_HEIGHT-step));
 		}
 		HoldDisplayBuffer(bf, time);
 	}
@@ -324,9 +290,9 @@ void Fall(const uint8_t *p, uint8_t time, uint8_t dir )
 {
 	//uint8_t *bf = buffer;
 	uint8_t index, step = 0;
-	for(step = 0; step < 8; step++)
+	for(step = 0; step <= FONT_HEIGHT; step++)
 	{
-		for(index = 0; index < 25; index++)
+		for(index = 0; index < MT_SIZE; index++)
 		{
 			if(!dir)
 			*(bf + index) = (*((p+index)) >> (step));
@@ -360,12 +326,12 @@ void ScrollLongLeft(const char *ch, uint8_t time)
 	int len = 0;
 	while(*ch){
 		chbuffer = CharBytes(ch++);
-		for(len =0; len<5; len++){
+		for(len =0; len<FONT_WIDTH; len++){
 			HoldDisplayBuffer(ArrayShiftRightInsert(*(chbuffer+len)), time);
 		}
 		HoldDisplayBuffer(ArrayShiftRightInsert(0), time);
 	}
-	for(len =0; len<25; len++){
+	for(len =0; len<MT_SIZE; len++){
 		HoldDisplayBuffer(ArrayShiftRightInsert(0), time);
 	}
 }

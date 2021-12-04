@@ -31,23 +31,38 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE. See the GNU General Public License for more details.
 */
- 
+
 
 
 #ifndef FONT_5X7_H_
 #define FONT_5X7_H_
 
 #include <avr/pgmspace.h>
+#include <string.h>
+#include "consts.h"
 
+/************************************************************************/
+/* font width                                                           */
+/************************************************************************/
+#define FONT_WIDTH 5
+
+/************************************************************************/
+/* font height                                                          */
+/************************************************************************/
+#define FONT_HEIGHT 7
+
+enum d_pos{
+LEFT, CENTRE, RIGHT
+}disp_pos;
 /************************************************************************/
 /* array buffer to hold display string bytes                            */
 /************************************************************************/
-uint8_t stringbuffer[25];
+uint8_t stringbuffer[MT_SIZE];
 
 /************************************************************************/
 /* array buffer to hold display char bytes                              */
 /************************************************************************/
-uint8_t charbuffer[5];
+uint8_t charbuffer[FONT_WIDTH];
 
 /************************************************************************/
 /* standard ascii font 5x7                                              */
@@ -154,8 +169,8 @@ const uint8_t font_5x7[] PROGMEM = {
 /************************************************************************/
 void ClearStringBuffer()
 {
-	uint8_t index = 0;	
-	for(index=0; index<25; index++){
+	uint8_t index = 0;
+	for(index=0; index<MT_SIZE; index++){
 		stringbuffer[index] = 0;
 	}
 }
@@ -165,7 +180,7 @@ void ClearStringBuffer()
 /************************************************************************/
 void ClearCharBuffer(){
 	uint8_t len;
-	for(len=0; len<5; len++){
+	for(len=0; len<FONT_WIDTH; len++){
 		charbuffer[len] = 0;
 	}
 }
@@ -183,10 +198,10 @@ uint8_t CharStart(const char *p)
 /************************************************************************/
 static inline uint8_t *CharBytes(const char *ch)
 {
-	unsigned int index = (CharStart(ch) * 5);
+	unsigned int index = (CharStart(ch) * FONT_WIDTH);
 	int len = 0;
 	ClearCharBuffer();
-	for(len=0; len<5; len++){
+	for(len=0; len<FONT_WIDTH; len++){
 		charbuffer[len] = (uint8_t)(pgm_read_byte((font_5x7 + index)));
 		index++;
 	}
@@ -195,21 +210,26 @@ static inline uint8_t *CharBytes(const char *ch)
 /************************************************************************/
 /* return buffer of the requested string								*/
 /************************************************************************/
-static inline uint8_t *StringBytes(char *ch)
+static inline uint8_t *StringBytes(char *ch, uint8_t align)
 {
 	unsigned int index = 0;
 	uint8_t len = 0;
-	uint8_t x = 0;
+	uint8_t pos_index = 0 , s_pos = 0; //start from left 0 pos
+	uint8_t c_len = strlen(ch);
+	if(align == CENTRE){
+		s_pos = (uint16_t)((MT_SIZE - (c_len * FONT_WIDTH) - (c_len + 2)) / 2.0 );
+	}else if(align == RIGHT){
+		s_pos = (MT_SIZE - (c_len * FONT_WIDTH) - c_len - 2);
+	}
+	pos_index = s_pos;
 	ClearStringBuffer();
 	while(*ch){
-		index = CharStart(ch++) * 5;
-		for(len = 0; len < 5; len++){
-			stringbuffer[x] = (uint8_t)(pgm_read_byte((font_5x7 + index)));
-			index++; x++;
+		index = CharStart(ch++) * FONT_WIDTH;
+		for(len = 0; len < FONT_WIDTH; len++){
+			stringbuffer[pos_index] = (uint8_t)(pgm_read_byte((font_5x7 + index)));
+			index++; pos_index++;
 		}
-		stringbuffer[x] = 0;
-		x++;
-		
+		pos_index += 1; //space the characters
 	}
 	return stringbuffer;
 }

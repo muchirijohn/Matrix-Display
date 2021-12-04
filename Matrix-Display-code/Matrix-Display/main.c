@@ -39,40 +39,42 @@
 /************************************************************************/
 char numbers[] = "012345678";
 uint8_t index_num = 0;
- 
+
 static void Animate()
 {
 	Clear();
 	//scroll long left
-	ScrollLongLeft("MAKE, HACK n CODE", 10);
+	//ScrollLongLeft("MAKERHACKS", 10);
+	HoldDisplayBuffer(StringBytes("MAKERHACKS", LEFT), 250);
+	ScrollLeft(StringBytes("MAKEHACKS", LEFT), 10);
 	//blink
-	Blinker(StringBytes("MAKE"), 10, 4);
+	Blinker(StringBytes("MAKE", LEFT), 10, 4);
 	//scroll right
-	ScrollRight(StringBytes("MAKE"), 10);
+	ScrollRight(StringBytes("MAKE", LEFT), 10);
 	//drop up
-	Drop(StringBytes("HACK"), 10, up);
+	Drop(StringBytes("HACK", CENTRE), 10, up);
 	//hold display
-	HoldDisplayBuffer(StringBytes("HACK"), 50);
+	HoldDisplayBuffer(StringBytes("HACK", CENTRE), 50);
 	//fall up
-	Fall(StringBytes("HACK"), 10, up);
+	Fall(StringBytes("HACK", CENTRE), 10, up);
 	//drop down
-	Drop(StringBytes("CODE"), 10, down);
+	Drop(StringBytes("CODE", RIGHT), 10, down);
 	//hold display
-	HoldDisplayBuffer(StringBytes("CODE"), 50);
+	HoldDisplayBuffer(StringBytes("CODE", RIGHT), 50);
 	//fall down
-	Fall(StringBytes("CODE"), 10, down);
+	Fall(StringBytes("CODE", RIGHT), 10, down);
 	//type word in
-	TypeIn(StringBytes("JOIN"), 10);
+	TypeIn(StringBytes("JOIN", LEFT), 10);
 	//hold display
-	HoldDisplayBuffer(StringBytes("JOIN"), 50);
+	HoldDisplayBuffer(StringBytes("JOIN", LEFT), 50);
 	//delete left
-	DeleteLeft(StringBytes("JOIN"),  10);
+	DeleteLeft(StringBytes("JOIN", LEFT),  10);
 	//split display
-	Rain(StringBytes("SHARE"), 100);
+	Rain(StringBytes("SHARE", CENTRE), 100);
 	//hold display
-	HoldDisplayBuffer(StringBytes("SHARE"), 50);
+	HoldDisplayBuffer(StringBytes("SHARE", CENTRE), 50);
 	//delete left
-	DeleteRight(StringBytes("SHARE"),  10);
+	DeleteRight(StringBytes("SHARE", CENTRE),  10);
 	//scroll long left
 	ScrollLongLeft("MAKERHACKS by MUCHIRIJOHN", 10);
 }
@@ -83,7 +85,7 @@ int main(void)
 {
 	init();
     while(1)
-    {   
+    {
 		Animate();
     }
 }
