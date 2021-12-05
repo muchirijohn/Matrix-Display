@@ -138,14 +138,14 @@ static inline void DisplayBuffer(const uint8_t *p)
 				pinWrite(clock_pin, HIGH);
 				pinWrite(clock_pin, LOW);
 				pos--;
-				if(pos < 0 ) break;
+				if(pos < 0) break;
 			}
 			pinWrite(latch_pin, HIGH);
 		}
 		MultiPlex(&byte);
 		Clear();
 	}
-	delayms = 1;
+	//delayms = 1;
 }
 /************************************************************************/
 /* initialize                                                           */

@@ -226,10 +226,10 @@ static inline uint8_t *StringBytes(char *ch, uint8_t align)
 	while(*ch){
 		index = CharStart(ch++) * FONT_WIDTH;
 		for(len = 0; len < FONT_WIDTH; len++){
-			stringbuffer[pos_index] = (uint8_t)(pgm_read_byte((font_5x7 + index)));
-			index++; pos_index++;
+			stringbuffer[pos_index++] = (uint8_t)(pgm_read_byte((font_5x7 + index++)));
 		}
 		pos_index += 1; //space the characters
+		if(pos_index >= MT_SIZE) break;
 	}
 	return stringbuffer;
 }

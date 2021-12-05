@@ -45,7 +45,7 @@ static void Animate()
 	Clear();
 	//scroll long left
 	//ScrollLongLeft("MAKERHACKS", 10);
-	HoldDisplayBuffer(StringBytes("MAKERHACKS", LEFT), 250);
+	HoldDisplayBuffer(StringBytes("MAKERHACKS", LEFT), 50);
 	ScrollLeft(StringBytes("MAKEHACKS", LEFT), 10);
 	//blink
 	Blinker(StringBytes("MAKE", LEFT), 10, 4);
